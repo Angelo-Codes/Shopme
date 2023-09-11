@@ -1,4 +1,4 @@
-package com.shopme.common.site;
+package com.shopme.common.entity.common.site;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
