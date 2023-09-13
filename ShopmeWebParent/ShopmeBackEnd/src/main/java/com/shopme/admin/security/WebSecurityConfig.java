@@ -1,4 +1,4 @@
-package com.shopme.common.entity.admin.security;
+package com.shopme.admin.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
