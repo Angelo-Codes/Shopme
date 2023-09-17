@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
 
 @Entity
 @Table(name = "users")
@@ -30,9 +31,9 @@ public class User {
 	
 	private boolean enable;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
-			name = "users_table",
+			name = "users_roles",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id")
 			)
