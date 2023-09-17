@@ -3,18 +3,10 @@ package com.shopme.common.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "User")
+@Table(name = "users")
 public class User {
 	
 	@Id
@@ -47,7 +39,6 @@ public class User {
 	private Set<Role> roles = new HashSet<>();
 
 	public User() {
-		
 	}
 
 	public User(String email, String password, String firstname, String lastname) {
@@ -130,7 +121,16 @@ public class User {
 		return "User [id=" + id + ", email=" + email + ", password=" + password + ", firstname=" + firstname
 				+ ", lastname=" + lastname + ", roles=" + roles + "]";
 	}
-	
-	
+
+	@Transient
+	public String photosImagePath() {
+		if (id == null || photos == null) return "/images/default-image.png";
+		return "/user-photos/" + this.id + "/" + this.photos;
+ 	}
+
+	 @Transient
+	public String getFullName() {
+		return firstname + " " + lastname;
+ 	}
 
 }

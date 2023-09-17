@@ -17,7 +17,7 @@ import com.shopme.common.entity.Role;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Rollback(false)
 public class RoleRepositoryTests {
-	
+
 	@Autowired
 	private RoleRepository repo;
 	
@@ -27,7 +27,7 @@ public class RoleRepositoryTests {
 		Role saveRole = repo.save(roleAdmin);
 		assertThat(saveRole.getId()).isGreaterThan(0);
 	}
-	
+
 	@Test
 	public void testCreateRestRoles() {
 		Role roleSalesPerson = new Role("Salespeson", "manage product price, "

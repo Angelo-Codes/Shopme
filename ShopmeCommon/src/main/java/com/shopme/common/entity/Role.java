@@ -10,12 +10,12 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class Role {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer Id;
+	private Integer id;
 	
 	@Column(length = 40, nullable = false, unique = true)
 	private String name;
@@ -26,8 +26,8 @@ public class Role {
 	public Role() {
 	}
 	
-	public Role(Integer Id) {
-		this.Id = Id;
+	public Role(Integer id) {
+		this.id = id;
 	}
 	
 	public Role(String name) {
@@ -40,11 +40,10 @@ public class Role {
 	}
 
 	public Integer getId() {
-		return Id;
+		return id;
 	}
 
-	public void setId(Integer id) {
-		Id = id;
+	public void setId(Integer id) { this.id = id;
 	}
 
 	public String getName() {
@@ -65,7 +64,7 @@ public class Role {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(Id);
+		return Objects.hash(id);
 	}
 
 	@Override
@@ -77,7 +76,7 @@ public class Role {
 		if (getClass() != obj.getClass())
 			return false;
 		Role other = (Role) obj;
-		return Objects.equals(Id, other.Id);
+		return Objects.equals(id, other.id);
 	}
 
 	@Override

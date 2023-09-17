@@ -1,4 +1,4 @@
-package com.shopme.common.entity.common.site;
+package com.shopme.site;
 
 import org.springframework.stereotype.Controller;
 
