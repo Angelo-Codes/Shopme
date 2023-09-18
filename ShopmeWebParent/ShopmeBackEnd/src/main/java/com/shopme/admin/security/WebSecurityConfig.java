@@ -61,5 +61,4 @@ public class WebSecurityConfig {
 						.userDetailsService(userDetailsService()) // specify your UserDetailsService here
 						);
 
-						return http.build();
 						}*/
