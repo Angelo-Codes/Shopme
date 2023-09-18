@@ -33,32 +33,27 @@ public class WebSecurityConfig {
 		return authProvider;
 	}
 
+
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests((requests) ->
-				requests.requestMatchers("/images/**", "/js/**", "/webjars/**").permitAll()
+				requests.requestMatchers("/images/**", "/js/**", "/webjars/**", "/fontawesome/**", "/style.css/**", "/webfonts/**", "/user-photos/**").permitAll()
 						.anyRequest().authenticated()
 		).formLogin((form) ->
 				form.loginPage("/login")
 						.usernameParameter("email")
 						.permitAll()
-		).logout((form) ->
-				form.logoutUrl("/logout")
+		).logout((formLogout) ->
+				formLogout.logoutUrl("/logout")
 						.permitAll()
+		).rememberMe((form) ->
+				form.key("fsdafsdfsdffd_435432543425432")
+						.tokenValiditySeconds(7 * 24 * 60 * 60)
+						.userDetailsService(userDetailsService())
 		);
 
 		return http.build();
 	}
 
 }
-
-
-          /*
-						)
-						.rememberMe(rememberMe -> rememberMe
-						.key("dfsafhfjhlkjdsjfkdasjf_123132131231123898")// specify your secret key
-						.tokenValiditySeconds(7*24*60*60)  // specify token validity time in seconds
-						.userDetailsService(userDetailsService()) // specify your UserDetailsService here
-						);
-
-						}*/
