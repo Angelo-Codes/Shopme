@@ -18,7 +18,6 @@ function customizeDropDownMenu() {
         location.href = this.href;
     })
 }
-
 function checkPasswordMatch(confirmPassword) {
     if (confirmPassword.value != $("#password").val()) {
         confirmPassword.serCustomValidity("Passwords do not match");

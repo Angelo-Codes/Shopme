@@ -33,12 +33,11 @@ public class WebSecurityConfig {
 		return authProvider;
 	}
 
-
-
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests((requests) ->
 				requests.requestMatchers("/images/**", "/js/**", "/webjars/**", "/fontawesome/**", "/style.css/**", "/webfonts/**", "/user-photos/**").permitAll()
+						.requestMatchers("/users/**").hasAuthority("Admin")
 						.anyRequest().authenticated()
 		).formLogin((form) ->
 				form.loginPage("/login")
