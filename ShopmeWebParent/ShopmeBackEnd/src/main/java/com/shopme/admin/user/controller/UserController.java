@@ -104,7 +104,7 @@ public class UserController {
 	public String editUser(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 
 		try {
-			User user = service.get(id);
+			User user = service.getId(id);
 			List<Role> listRoles = service.listRoles();
 
 			model.addAttribute("user", user);

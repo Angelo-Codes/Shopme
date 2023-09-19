@@ -38,6 +38,7 @@ public class WebSecurityConfig {
 		http.authorizeHttpRequests((requests) ->
 				requests.requestMatchers("/images/**", "/js/**", "/webjars/**", "/fontawesome/**", "/style.css/**", "/webfonts/**", "/user-photos/**").permitAll()
 						.requestMatchers("/users/**").hasAuthority("Admin")
+						.requestMatchers("/categories/**").hasAnyAuthority("Admin", "Editor")
 						.anyRequest().authenticated()
 		).formLogin((form) ->
 				form.loginPage("/login")

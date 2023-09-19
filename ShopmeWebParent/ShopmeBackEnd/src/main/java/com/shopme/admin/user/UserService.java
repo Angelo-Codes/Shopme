@@ -112,7 +112,7 @@ public class UserService {
 		return true;
 	}
 
-	public User get(Integer id) throws UserNotFoundException{
+	public User getId(Integer id) throws UserNotFoundException{
 		try {
 			return userRepo.findById(id).get();
 		} catch (NoSuchElementException ex) {
