@@ -30,7 +30,7 @@ public class CategoryRepositoryTest {
 
     @Test
     public void testCreateSubCategories() {
-        Category parent = new Category(1);
+        Category parent = new Category(32);
         Category subCategory = new Category("Memory", parent);
         Category saveCategory = repo.save(subCategory);
         assertThat(saveCategory.getId()).isGreaterThan(0);
@@ -87,4 +87,21 @@ public class CategoryRepositoryTest {
         rootCategory.forEach(cat -> System.out.println(cat.getName()));
     }
 
+    @Test
+    public void testFindByName() {
+        String name = "Computer";
+        Category category = repo.findByName(name);
+
+        assertThat(category).isNotNull();
+        assertThat(category).isEqualTo(name);
+    }
+
+    @Test
+    public void testFindByAlias() {
+        String name = "Computer";
+        Category category = repo.findByAlias(name);
+
+        assertThat(category).isNotNull();
+        assertThat(category).isEqualTo(name);
+    }
 }

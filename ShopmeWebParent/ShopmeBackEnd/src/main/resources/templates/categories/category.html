@@ -59,14 +59,14 @@
                 <td>[[${category.alias}]]</td>
                 <td>
                     <a th:if="${category.enabled == true}" class="fas fa-circle fa-2x icon-silver"
-                       th:href="@{'/category/' + ${category.id} + '/enabled/true'}" title="Disabled this category"></a>
+                       th:href="@{'/categories/' + ${category.id} + '/enabled/true'}" title="Disabled this category"></a>
                     <a th:if="${category.enabled == false}" class="fas fa-circle fa-2x icon-silver"
-                       th:href="@{'/category/' + ${category.id} + '/enabled/true'}" title="Disabled this category"></a>
+                       th:href="@{'/categories/' + ${category.id} + '/enabled/true'}" title="enable this category"></a>
                 </td>
                 <td>
-                    <a class="fa-regular fa-pen-to-square fa-2x icon-dark " title="edit this category" th:href="@{'/category/edit/' + ${category.id}}"></a>
+                    <a class="fa-regular fa-pen-to-square fa-2x icon-dark " title="edit this category" th:href="@{'/categories/edit/' + ${category.id}}"></a>
                     &nbsp;
-                    <a class="fa-regular fa-trash-can fa-2x icon-dark link-delete" title="delete this category" th:href="@{'/category/delete/' + ${category.id}}"></a>
+                    <a class="fa-regular fa-trash-can fa-2x icon-dark link-delete" title="delete this category" th:href="@{'/categories/delete/' + ${category.id}}"></a>
                 </td>
             </tr>
             </tbody>

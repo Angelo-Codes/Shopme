@@ -2,8 +2,8 @@ package com.shopme.admin.category;
 
 import com.shopme.admin.user.UserNotFoundException;
 import com.shopme.common.entity.Category;
-import com.shopme.common.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,20 +18,48 @@ public class CategoryService {
     private CategoryRepository repo;
 
     public List<Category> lisAll() {
-        List<Category> rootCategories = repo.findRootCategory();
+        List<Category> rootCategories = repo.findRootCategory(Sort.by("name").ascending());
         return listHerarchicalCategory(rootCategories);
     }
+
+
 
     public List<Category> listCategory() {
         return (List<Category>) repo.findAll();
     }
 
-    public Category getId(Integer id) throws UserNotFoundException {
+    public Category getId(Integer id) throws CategoryNotfoundException {
         try {
             return repo.findById(id).get();
         } catch (NoSuchElementException ex) {
-            throw new UserNotFoundException("could not find any category with ID " + id);
+            throw new CategoryNotfoundException("could not find any category with ID " + id);
         }
+    }
+
+    public String checkUnigue(Integer id, String name, String alias) {
+        boolean isCreatingNew = (id == null || id == 0);
+
+        Category categoryByName = repo.findByName(name);
+
+        if (isCreatingNew) {
+            if (categoryByName != null) {
+                return "DuplicateName";
+            } else {
+                Category categoryByAlias = repo.findByAlias(alias);
+                if (categoryByAlias != null) {
+                    return "DuplicateName";
+                }
+            }
+        } else {
+            if (categoryByName != null && categoryByName.getId() != id) {
+                return "DuplicatedAlias";
+            }
+            Category categoryByAlias = repo.findByAlias(alias);
+            if (categoryByAlias != null && categoryByAlias.getId() != id) {
+                return "DuplicatedAlias";
+            }
+        }
+        return "OK";
     }
 
 
@@ -90,7 +118,7 @@ public class CategoryService {
 
     public List<Category> listCategoriesUsedInform() {
         List<Category> categoriesUserInFrom = new ArrayList<>();
-        Iterable<Category> categoriesInDB = repo.findAll();
+        Iterable<Category> categoriesInDB = repo.findRootCategory(Sort.by("name").ascending());
 
         for (Category category : categoriesInDB) {
             if (category.getParent() == null) {

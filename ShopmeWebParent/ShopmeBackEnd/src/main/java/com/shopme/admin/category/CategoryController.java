@@ -41,18 +41,25 @@ public class CategoryController {
 
     @PostMapping("/categories/save")
     private String saveCategory(Category category, @RequestParam("fileImage") MultipartFile multipartFile, RedirectAttributes redirectAttributes) throws IOException {
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        category.setImage(fileName);
-        Category saveCategory = service.save(category);
-        String uploadDir = "../category-images/" + saveCategory.getId();
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        if (!multipartFile.isEmpty()) {
+            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            category.setImage(fileName);
+            Category saveCategory = service.save(category);
+            String uploadDir = "../category-images/" + saveCategory.getId();
+
+            FileUploadUtil.cleanDir(uploadDir);
+            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+
+        } else {
+            service.save(category);
+        }
 
         redirectAttributes.addFlashAttribute("message", "the category has been saved succesfully");
 
         return "redirect:/categories";
     }
 
-    @GetMapping("/category/edit/{id}")
+    @GetMapping("/categories/edit/{id}")
     public String editCategory(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
         try {
             Category category = service.getId(id);
@@ -60,11 +67,12 @@ public class CategoryController {
 
             model.addAttribute("category", category);
             model.addAttribute("listRoles", listCategory);
+            model.addAttribute("pageTitle", "Edit Category (ID: " + id + ")");
 
             return "categories/category_form";
-        } catch (UserNotFoundException ex) {
+        } catch (CategoryNotfoundException ex) {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
-            return "redirect:/category";
+            return "redirect:/categories";
         }
     }
 
@@ -79,7 +87,7 @@ public class CategoryController {
         return "redirect:/category_form";
     }
 
-    @GetMapping("/category/{id}/enabled/{status}")
+    @GetMapping("/categories/{id}/enabled/{status}")
     public String updateUserEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
         service.updateCategoriesEnableStatus(id, enabled);
         String status = enabled ? "enabled" : "disabled";

@@ -9,12 +9,14 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.shopme.common.entity.User;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UserRepository extends PagingAndSortingRepository<User, Integer>, CrudRepository<User, Integer> {
 	@Query("SELECT u FROM User u WHERE u.email = :email")
 	public User getUserByEmail(@Param("email") String email);
 
-	public long countById(Integer id);
+	public Long countById(Integer id);
 	@Query("SELECT u FROM User u WHERE CONCAT(u.id, ' ',u.email, ' ',u.firstname, ' ',u.lastname) LIKE %?1%")
 	public Page<User> findAll(String keyword, Pageable pageable);
 
