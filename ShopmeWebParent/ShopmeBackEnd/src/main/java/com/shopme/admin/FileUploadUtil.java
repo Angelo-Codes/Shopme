@@ -1,13 +1,16 @@
 package com.shopme.admin;
 
 import org.springframework.web.multipart.MultipartFile;
-
+import java.util.logging.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+
+import static org.hibernate.query.sql.NativeQueryLogging.LOGGER;
+
 
 public class FileUploadUtil {
     public static void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException{
@@ -34,12 +37,21 @@ public class FileUploadUtil {
                         Files.delete(file);
                     } catch (IOException  ex) {
                         System.out.println("could not delete file:" + file);
-
                     }
                 }
             });
         } catch (IOException ex) {
             System.out.println("could not list directory:" + dirPath);
+        }
+    }
+
+    public static void removeDir(String dir) {
+        cleanDir(dir);
+
+        try {
+            Files.delete(Paths.get(dir));
+        } catch (IOException e) {
+            System.out.println("Could not remove directory:" + dir);
         }
     }
 }

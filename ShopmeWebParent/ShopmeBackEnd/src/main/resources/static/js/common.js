@@ -20,8 +20,8 @@ function customizeDropDownMenu() {
 }
 function checkPasswordMatch(confirmPassword) {
     if (confirmPassword.value != $("#password").val()) {
-        confirmPassword.serCustomValidity("Passwords do not match");
+        confirmPassword.setCustomValidity("Passwords do not match");
     } else {
-        confirmPassword.serCustomValidity("");
+        confirmPassword.setCustomValidity("");
     }
 }

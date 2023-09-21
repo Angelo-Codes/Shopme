@@ -17,5 +17,23 @@
       </div>
     </div>
   </div>
+
+  <div th:fragment="confirm_modal" class="modal fade text-center" id="confirmModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Delete Confirmation</h3>
+          <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <span id="confirmText"></span>
+        </div>
+        <div class="modal-footer">
+          <a class="btn btn-success" href="" id="yesButton">Yes</a>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
