@@ -1,7 +1,6 @@
 package com.shopme.admin.category;
 
 import com.shopme.admin.FileUploadUtil;
-import com.shopme.admin.user.UserService;
 import com.shopme.common.entity.Category;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class CategoryController {
 
     @GetMapping("/categories")
     public String listFirstPage(@Param("sortDir") String sortDir, Model model) {
-        return listByPage(1,sortDir, null, model);
+        return listByPage(1, sortDir, null, model);
     }
 
     @GetMapping("/categories/page/{pageNum}")
@@ -35,7 +34,6 @@ public class CategoryController {
         if (sortDir == null || sortDir.isEmpty()) {
             sortDir = "asc";
         }
-
 
         CategoryPageInfo pageInfo = new CategoryPageInfo();
         List<Category> listCategories = service.lisByPage(pageInfo, pageNum, sortDir, keyword);
@@ -136,6 +134,4 @@ public class CategoryController {
         CategoryCsvExporter exporter = new CategoryCsvExporter();
         exporter.export(listCategories, response);
     }
-
-
 }

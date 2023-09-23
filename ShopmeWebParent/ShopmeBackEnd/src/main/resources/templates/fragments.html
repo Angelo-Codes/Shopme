@@ -6,9 +6,9 @@
 <body>
 
   <!--For columnLInk-->
-  <th th:fragment="column_link(fieldName, columnLabel, removeTag)" th:remove="${removeTag}">
+  <th th:fragment="column_link(moduleUrl, fieldName, columnLabel, removeTag)" th:remove="${removeTag}">
     <a class="text-black"
-       th:href="@{'/users/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+       th:href="@{${moduleUrl} + '/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">
       [[${columnLabel}]]
     </a>
     <span th:if="${sortField == fieldName}" class="text-black"
@@ -71,7 +71,10 @@
     <p>Shopme Control Panel - Copyright &copy; Shopme</p>
   </div>
 
-  <div th:fragment="search_form(moduleURL)">
+  <div th:fragment="search_form_message(moduleURL)">
+    <div th:if="${message != null}" class="alert alert-success text-center">
+      [[${message}]]
+    </div>
     <form th:action="@{${moduleURL} + 'page/1'}"  method="get" class="form-inline m3">
       <input type="hidden" name="sortField" th:value="${sortField}">
       <input type="hidden" name="sortDir" th:value="${sortDir}">

@@ -10,15 +10,16 @@ import java.nio.file.Paths;
 public class MvcConfig implements WebMvcConfigurer {
 
     public void addResourceHandler(ResourceHandlerRegistry registry) {
-        String dirName = "user-photos";
-        Path userPhotosDir = Paths.get(dirName);
-        String userPhotosPath = userPhotosDir.toFile().getAbsolutePath();
-        registry.addResourceHandler("/" + dirName + "/**").addResourceLocations("file:/" + userPhotosPath + "/");
+        exposeDirectory("user-photos", registry);
+        exposeDirectory("../category-images", registry);
+        exposeDirectory("../brand-logos", registry);
+    }
 
-        String categoryImageDirName = "../category-images";
-        Path categoryImageDir = Paths.get(categoryImageDirName);
-        String categoryImagePath = categoryImageDir.toFile().getAbsolutePath();
-        registry.addResourceHandler("/category-images/**").addResourceLocations("file:/" + categoryImagePath + "/");
+    public void exposeDirectory(String pathPattern, ResourceHandlerRegistry registry) {
+        Path path = Paths.get(pathPattern);
+        String absolutePath = path.toFile().getAbsolutePath();
 
+        String logicalPath = pathPattern.replace("..", "") + "/**";
+        registry.addResourceHandler(logicalPath).addResourceLocations("file:/" + absolutePath + "/");
     }
 }

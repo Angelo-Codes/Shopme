@@ -43,7 +43,6 @@ public class CategoryService {
             for (Category category : searchResult) {
                 category.setHasChildren(category.getChildren().size() > 0);
             }
-
             return searchResult;
         } else {
             return listHerarchicalCategory(rootCategories, sortDir);
@@ -73,16 +72,16 @@ public class CategoryService {
             } else {
                 Category categoryByAlias = repo.findByAlias(alias);
                 if (categoryByAlias != null) {
-                    return "DuplicateName";
+                    return "DuplicateAlias";
                 }
             }
         } else {
             if (categoryByName != null && categoryByName.getId() != id) {
-                return "DuplicatedAlias";
+                return "DuplicateName";
             }
             Category categoryByAlias = repo.findByAlias(alias);
             if (categoryByAlias != null && categoryByAlias.getId() != id) {
-                return "DuplicatedAlias";
+                return "DuplicateAlias";
             }
         }
         return "OK";
@@ -101,7 +100,6 @@ public class CategoryService {
                 } else {
                     return cat2.getName().compareTo(cat1.getName());
                 }
-
             }
         });
         sortedChildrend.addAll(children);
@@ -135,7 +133,6 @@ public class CategoryService {
                 listSubHierarchicalCategories(hierachicalCategory, subCategory, 1, sortDir);
             }
         }
-
         return hierachicalCategory;
     }
 
@@ -178,11 +175,10 @@ public class CategoryService {
                 }
             }
         }
-
         return categoriesUserInFrom;
     }
 
-    private void listSubCategoriesUsedInForm(List<Category> categoriesUserInFrom,Category parent, int sublevel) {
+    private void listSubCategoriesUsedInForm(List<Category> categoriesUserInFrom, Category parent, int sublevel) {
         int newSublevel = sublevel + 1;
         Set<Category> children =  sortSubCategories(parent.getChildren());
         for (Category subCategory : children) {
@@ -191,7 +187,7 @@ public class CategoryService {
                 name += "--";
             }
             name += subCategory.getName();
-            categoriesUserInFrom.add(new Category(name));
+            categoriesUserInFrom.add(Category.copyIdAndName(subCategory.getId(), name));
 
             listSubCategoriesUsedInForm(categoriesUserInFrom, subCategory, newSublevel);
         }

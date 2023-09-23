@@ -15,27 +15,24 @@
 		<a th:href="@{/users/export/pdf}" class="fas fa-file-pdf fa-2x icon-dark" title="Export to PDF"></a>
 	</div>
 
-	<div th:if="${message != null}" class="alert alert-success text-center">
-		[[${message}]]
-	</div>
-	<div th:replace="~{fragments :: search_form('/users/')}"></div>
+	<div th:replace="~{fragments :: search_form_message('/users/')}"></div>
 	<div class="full-details">
 		<table class="table table-hover table-responsive-xl">
 			<thead class="thead-dark">
 				<tr>
 					<th class="hideable-column">
-						<th  th:replace="~{fragments :: column_link('id', 'User ID', 'tag')}"></th>
+						<th  th:replace="~{fragments :: column_link('/users', 'id', 'User ID', 'tag')}"></th>
 					</th>
 
 					<th>Photos</th>
 					<th class="hideable-column">
-						<th  th:replace="~{fragments :: column_link('email', 'E-mail', 'tag')}" ></th>
+						<th  th:replace="~{fragments :: column_link('/users', 'email', 'E-mail', 'tag')}" ></th>
 					</th>
 
-					<th th:replace="~{fragments :: column_link('firstname', 'First Name', 'none')}" ></th>
-					<th th:replace="~{fragments :: column_link('lastname', 'Last Name', 'none')}" ></th>
+					<th th:replace="~{fragments :: column_link('/users', 'firstname', 'First Name', 'none')}" ></th>
+					<th th:replace="~{fragments :: column_link('/users', 'lastname', 'Last Name', 'none')}" ></th>
 					<th>Roles</th>
-					<th th:replace="~{fragments :: column_link('enable', 'Enabled', 'none')}" ></th>
+					<th th:replace="~{fragments :: column_link('/users', 'enable', 'Enabled', 'none')}" ></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -50,15 +47,23 @@
 				<td>[[${user.lastname}]]</td>
 				<td>[[${user.roles}]]</td>
 				<td>
-					<a th:if="${user.enable == true}" class="fas fa-check-circle fa-2x icon-dark"
-					th:href="@{'/users/' + ${user.id} + '/enable/false'}" title="Enabled this user"></a>
-					<a th:if="${user.enable == false}" class="fas fa-circle fa-2x icon-silver"
-					th:href="@{'/users/' + ${user.id} + '/enable/true'}" title="Disabled this user"></a>
+					<a th:if="${user.enable == true}"
+					   class="fas fa-check-circle fa-2x icon-dark"
+					th:href="@{'/users/' + ${user.id} + '/enable/false'}"
+					   title="Enabled this user"></a>
+					<a th:if="${user.enable == false}"
+					   class="fas fa-circle fa-2x icon-silver"
+					th:href="@{'/users/' + ${user.id} + '/enable/true'}"
+					   title="Disabled this user"></a>
 				</td>
 				<td>
-					<a class="fa-regular fa-pen-to-square fa-2x icon-dark " title="edit this user" th:href="@{'/users/edit/' + ${user.id}}"></a>
+					<a class="fa-regular fa-pen-to-square fa-2x icon-dark "
+					   title="edit this user"
+					   th:href="@{'/users/edit/' + ${user.id}}"></a>
 					 &nbsp;
-					<a class="fa-regular fa-trash-can fa-2x icon-dark link-delete" title="delete this user" th:href="@{'/users/delete/' + ${user.id}}"></a>
+					<a class="fa-regular fa-trash-can fa-2x icon-dark link-delete"
+					   title="delete this user"
+					   th:href="@{'/users/delete/' + ${user.id}}"></a>
 				</td>
 			</tr>
 			</tbody>
@@ -76,14 +81,22 @@
 				<div>[[${user.roles}]]</div>
 
 				<div class="mt-1">
-					<a th:if="${user.enable == true}" class="fas fa-check-circle fa-2x icon-dark"
-					   th:href="@{'/users/' + ${user.id} + '/enable/false'}" title="Enabled this user"></a>
-					<a th:if="${user.enable == false}" class="fas fa-circle fa-2x icon-silver"
-					   th:href="@{'/users/' + ${user.id} + '/enable/true'}" title="Disabled this user"></a>
+					<a th:if="${user.enable == true}"
+					   class="fas fa-check-circle fa-2x icon-dark"
+					   th:href="@{'/users/' + ${user.id} + '/enable/false'}"
+					   title="Enabled this user"></a>
+					<a th:if="${user.enable == false}"
+					   class="fas fa-circle fa-2x icon-silver"
+					   th:href="@{'/users/' + ${user.id} + '/enable/true'}"
+					   title="Disabled this user"></a>
 					&nbsp;
-					<a class="fa-regular fa-pen-to-square fa-2x icon-dark " title="edit this user" th:href="@{'/users/edit/' + ${user.id}}"></a>
+					<a class="fa-regular fa-pen-to-square fa-2x icon-dark "
+					   title="edit this user"
+					   th:href="@{'/users/edit/' + ${user.id}}"></a>
 					&nbsp;
-					<a class="fa-regular fa-trash-can fa-2x icon-dark link-delete" title="delete this user" th:href="@{'/users/delete/' + ${user.id}}"></a>
+					<a class="fa-regular fa-trash-can fa-2x icon-dark link-delete"
+					   title="delete this user"
+					   th:href="@{'/users/delete/' + ${user.id}}"></a>
 				</div>
 			</div>
 		</div>

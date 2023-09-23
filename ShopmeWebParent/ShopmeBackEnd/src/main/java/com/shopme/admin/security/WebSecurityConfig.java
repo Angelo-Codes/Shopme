@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,9 +37,8 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests((requests) ->
-				requests.requestMatchers("/images/**", "/js/**", "/webjars/**", "/fontawesome/**", "/style.css/**", "/webfonts/**", "/user-photos/**").permitAll()
-						.requestMatchers("/users/**").hasAuthority("Admin")
-						.requestMatchers("/categories/**").hasAnyAuthority("Admin", "Editor")
+				requests.requestMatchers("/users/**").hasAuthority("Admin")
+						.requestMatchers("/categories/**", "/brands/**").hasAnyAuthority("Admin", "Editor")
 						.anyRequest().authenticated()
 		).formLogin((form) ->
 				form.loginPage("/login")
@@ -55,5 +55,11 @@ public class WebSecurityConfig {
 
 		return http.build();
 	}
+
+	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+		return (web) -> web.ignoring().requestMatchers("/images/**", "/js/**", "/webjars/**", "/fontawesome/**", "/style.css/**", "/webfonts/**", "/static/user-photos/**");
+	}
+
 
 }

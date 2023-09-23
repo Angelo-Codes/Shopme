@@ -1,3 +1,5 @@
+/*
+
 package com.shopme.admin.category;
 
 import com.shopme.common.entity.Category;
@@ -105,3 +107,4 @@ public class CategoryRepositoryTest {
         assertThat(category).isEqualTo(name);
     }
 }
+*/

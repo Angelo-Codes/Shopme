@@ -11,11 +11,7 @@
         <a th:href="@{/categories/export/csv}" class="fas fa-file-csv fa-2x icon-dark" title="Export to CSV"></a>
     </div>
 
-    <div th:if="${message != null}" class="alert alert-success text-center">
-        [[${message}]]
-    </div>
-
-    <div th:replace="~{fragments :: search_form('/categories/')}"></div>
+    <div th:replace="~{fragments :: search_form_message('/categories/')}"></div>
     <div class="full-details">
         <table class="table table-hover table-responsive-xl">
             <thead class="thead-dark">
@@ -26,10 +22,8 @@
                 <th>
                     Category Image
                 </th>
-                <th>
-                    <a class="text-black" th:href="@{'/categories/page/' + ${currentPage} + '?sortDir=' + ${reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">Category Name</a>
-                    <span th:class="${reverseSortDir == 'desc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"/>
-                </th>
+                <th  th:replace="~{fragments :: column_link('/categories', 'name', 'Category Name', 'none')}"></th>
+
                 <th class="hideable-column">
                     Alias
                 </th>
@@ -71,14 +65,24 @@
             <div class="col-8">
                 <div>[[${category.name}]]</div>
                 <div>
-                    <a th:if="${category.enabled == true}" class="fas fa-check-circle fa-2x icon-dark"
-                       th:href="@{'/categories/' + ${category.id} + '/enabled/false'}" title="Disable this category"></a>
-                    <a th:if="${category.enabled == false}" class="fas fa-circle fa-2x icon-silver"
-                       th:href="@{'/categories/' + ${category.id} + '/enabled/true'}" title="enable this category"></a>
+                    <a th:if="${category.enabled == true}"
+                       class="fas fa-check-circle fa-2x icon-dark"
+                       th:href="@{'/categories/' + ${category.id} + '/enabled/false'}"
+                       title="Disable this category"></a>
+                    <a th:if="${category.enabled == false}"
+                       class="fas fa-circle fa-2x icon-silver"
+                       th:href="@{'/categories/' + ${category.id} + '/enabled/true'}"
+                       title="enable this category"></a>
                     &nbsp;
-                    <a class="fa-regular fa-pen-to-square fa-2x icon-dark " title="edit this category" th:href="@{'/categories/edit/' + ${category.id}}"></a>
+                    <a class="fa-regular fa-pen-to-square fa-2x icon-dark "
+                       title="edit this category"
+                       th:href="@{'/categories/edit/' + ${category.id}}"></a>
                     &nbsp;
-                    <a th:if="${category.hasChildren == false}" class="fa-regular fa-trash-can fa-2x icon-dark link-delete" title="delete this category" th:href="@{'/categories/delete/' + ${category.id}}" th:entityId="${category.id}"></a>
+                    <a th:if="${category.hasChildren == false}"
+                       class="fa-regular fa-trash-can fa-2x icon-dark link-delete"
+                       title="delete this category"
+                       th:href="@{'/categories/delete/' + ${category.id}}"
+                       th:entityId="${category.id}"></a>
 
                 </div>
             </div>
