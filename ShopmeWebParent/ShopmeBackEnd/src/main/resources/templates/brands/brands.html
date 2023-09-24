@@ -11,7 +11,7 @@
         <a th:href="@{/brands/export/csv}" class="fas fa-file-csv fa-2x icon-dark" title="Export to CSV"></a>
     </div>
 
-    <div th:replace="~{fragments :: search_form_message('/brands/')}"></div>
+    <div th:replace="~{fragments :: search_form_and_message('/brands/page/1')}"></div>
     <div class="full-details">
         <table class="table table-hover table-responsive-xl">
             <thead class="thead-dark">
@@ -22,9 +22,7 @@
                 <th>
                     Logo
                 </th>
-                <th>
-                    Brand Name
-                </th>
+                <th th:replace="~{fragments :: column_link('/brands', 'name', 'Brand Name', 'none')}"></th>
                 <th>
                     Categories
                 </th>
@@ -33,9 +31,9 @@
             </thead>
             <tbody>
             <tr th:each="brand : ${listOfBrands}">
-                <td>[[${brand.id}]]</td>
+                <td class="hideable-column">[[${brand.id}]]</td>
                 <td>
-                    <img th:src="@{${brand-LogosPath}}" style="width: 100px" class="img-fluid"/>
+                    <img th:src="@{${brand.logoPath}}" style="width: 100px" class="img-fluid"/>
                 </td>
                 <td>[[${brand.name}]]</td>
                 <td>
@@ -59,7 +57,7 @@
     <div th:replace="~{fragments :: footer}"></div>
 
 <script type="text/javascript">
-    moduleURL = "[[@{/categories}]]";
+    moduleURL = "[[@{/brands}]]";
 
     $(document).ready(function() {
         $(".link-delete").on("click", function(e) {

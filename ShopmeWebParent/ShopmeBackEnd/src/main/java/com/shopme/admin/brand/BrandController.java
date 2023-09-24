@@ -6,6 +6,8 @@ import com.shopme.common.entity.Brand;
 import com.shopme.common.entity.Category;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -27,20 +29,48 @@ public class BrandController {
     @Autowired
     private CategoryService categoryService;
 
+
     @GetMapping("/brands")
-    public String listAll(Model model) {
-       List<Brand> listOfBrands = brandService.listAll();
-       model.addAttribute("listOfBrands", listOfBrands);
-       return "brands/brands";
+    public String listbyPage(Model model) {
+       return listByPage(1, model, "name", "asc", null);
+    }
+
+    @GetMapping("/brands/page/{pageNum}")
+    public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
+                             @Param("sortField") String sortField, @Param("sortDir") String sortDir,
+                             @Param("keyword") String keyword) {
+        Page<Brand> page = brandService.listByPage(pageNum, sortField, sortDir, keyword);
+        List<Brand> listBrands = page.getContent();
+        long startCount = (pageNum - 1) + BrandService.BRANS_PER_PAGE + 1;
+        long endCount = startCount + BrandService.BRANS_PER_PAGE - 1;
+
+        if (endCount > page.getTotalElements()) {
+            endCount = page.getTotalElements();
+        }
+
+        String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("startCount", startCount);
+        model.addAttribute("endCount", endCount);
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", reverseSortDir);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("listOfBrands", listBrands);
+
+        return "brands/brands";
     }
 
     @GetMapping("/brands/new")
     public String newBrand(Model model) {
-        List<Category> listCategories =  categoryService.listCategoriesUsedInform();
+        List<Category> listCategories =  categoryService.listCategoriesUsedInForm();
 
         model.addAttribute("listCategories", listCategories);
         model.addAttribute("brand", new Brand());
-        model.addAttribute("pageTile", "Create new brand");
+        model.addAttribute("pageTitle", "Create new brand");
 
         return "brands/brand_form";
     }
@@ -67,7 +97,7 @@ public class BrandController {
     public String editBrand(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
         try {
             Brand brand = brandService.get(id);
-            List<Category> listCategories = categoryService.listCategoriesUsedInform();
+            List<Category> listCategories = categoryService.listCategoriesUsedInForm();
 
             model.addAttribute("brand", brand);
             model.addAttribute("listCategories", listCategories);

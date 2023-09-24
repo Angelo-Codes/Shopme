@@ -8,7 +8,6 @@ import java.util.Set;
 @Entity
 @Table(name = "categories")
 public class Category {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -21,6 +20,7 @@ public class Category {
 
     @Column(length = 128, nullable = false)
     private String image;
+
     private boolean enabled;
 
     @OneToOne
@@ -39,8 +39,8 @@ public class Category {
 
     public static Category copyIdAndName(Category category) {
         Category copyCategory = new Category();
-        category.setId(category.getId());
-        category.setName(category.getName());
+        copyCategory.setId(category.getId());
+        copyCategory.setName(category.getName());
 
         return copyCategory;
     }
@@ -61,15 +61,16 @@ public class Category {
         copyCategory.setAlias(category.getAlias());
         copyCategory.setEnabled(category.isEnabled());
         copyCategory.setHasChildren(category.getChildren().size() > 0);
+
         return copyCategory;
     }
 
     public static Category copyFull(Category category, String name) {
         Category copyCategory = Category.copyFull(category);
         copyCategory.setName(name);
+
         return copyCategory;
     }
-
 
     public Category(String name) {
         this.name = name;
@@ -148,6 +149,7 @@ public class Category {
     @Transient
     public String getImagePath() {
         if (this.id == null) return "/images/image-thumbnail.png";
+
         return "/category-images/" + this.id + "/" + this.image;
     }
 
@@ -161,4 +163,5 @@ public class Category {
 
     @Transient
     private boolean hasChildren;
+
 }
