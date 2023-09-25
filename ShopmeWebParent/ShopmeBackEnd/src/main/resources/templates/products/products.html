@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: page_head('Products | Shopme Admin')}">
+<body>
+<div class="container-fluid">
+    <div th:replace="~{navigation :: menu}"></div>
+    <div>
+        <h1>Manage Brands</h1>
+        <a th:href="@{/products/new}" class="fas fa-folder-plus fa-2x icon-dark" title="Create New User"></a>
+        &nbsp;&nbsp;
+        <a th:href="@{/products/export/csv}" class="fas fa-file-csv fa-2x icon-dark" title="Export to CSV"></a>
+    </div>
+
+    <div th:replace="~{fragments :: search_form_and_message('/products/page/1')}"></div>
+    <div class="full-details">
+        <table class="table table-hover table-responsive-xl">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Main Image</th>
+                <th>Product Name</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Enabled</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${listProducts}">
+                <td>[[${product.id}]]</td>
+                <td></td>
+                <td>[[${product.name}]]</td>
+                <td>[[${product.brand.name}]]</td>
+                <td>[[${product.category.name}]]</td>
+                <td>
+                    <a th:if="${product.enabled == true}" class="fas fa-check-circle fa-2x icon-dark"
+                       th:href="@{'/products/' + ${product.id} + '/enabled/false'}" title="Disable this product"></a>
+                    <a th:if="${product.enabled == false}" class="fas fa-circle fa-2x icon-silver"
+                       th:href="@{'/products/' + ${product.id} + '/enabled/true'}" title="enable this product"></a>
+                </td>
+                <td>
+                    <a th:href="@{'products/details/' + ${product.id}}" class="fas fa-file-alt fa-2x icon-dark" title="View details of this product"></a>
+                    &nbsp;
+                    <a class="fa-regular fa-pen-to-square fa-2x icon-dark " title="edit this product" th:href="@{'/product/edit/' + ${product.id}}"></a>
+                    &nbsp;
+                    <a class="fa-regular fa-trash-can fa-2x icon-dark link-delete" title="delete this product" th:href="@{'/product/delete/' + ${product.id}}" th:entityId="${product.id}"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:replace="~{modal_fragments :: confirm_modal}"></div>
+    <div th:replace="~{fragments :: footer}"></div>
+
+    <script type="text/javascript">
+        moduleURL = "[[@{/products}]]";
+
+        $(document).ready(function() {
+            $(".link-delete").on("click", function(e) {
+                e.preventDefault();
+                showDeleteConfirmDialog($(this), 'category');
+            });
+        });
+    </script>
+    <script th:src="@{/js/common_list.js}"></script>
+</div>
+</body>
+</html>

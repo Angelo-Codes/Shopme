@@ -4,6 +4,7 @@ import com.shopme.admin.FileUploadUtil;
 import com.shopme.admin.category.CategoryService;
 import com.shopme.common.entity.Brand;
 import com.shopme.common.entity.Category;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -54,7 +55,7 @@ public class BrandController {
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("startCount", startCount);
         model.addAttribute("endCount", endCount);
-        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("totalItem", page.getTotalElements());
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("reverseSortDir", reverseSortDir);
@@ -124,4 +125,13 @@ public class BrandController {
         }
         return "redirect:/brands";
     }
+
+    @GetMapping("/brands/export/csv")
+    public void exportToCSV(HttpServletResponse response) throws IOException{
+        List<Brand> listBrands = brandService.listAll();
+
+        BrandCsvExporter exporter = new BrandCsvExporter();
+        exporter.export(listBrands, response);
+    }
+
 }
