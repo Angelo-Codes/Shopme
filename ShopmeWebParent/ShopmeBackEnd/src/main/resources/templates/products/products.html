@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: page_head('Products | Shopme Admin')}">
+<head th:replace="~{fragments :: page_head('Products | Shopme Admin', 'tag')}">
 <body>
 <div class="container-fluid">
     <div th:replace="~{navigation :: menu}"></div>
@@ -11,7 +11,7 @@
         <a th:href="@{/products/export/csv}" class="fas fa-file-csv fa-2x icon-dark" title="Export to CSV"></a>
     </div>
 
-    <div th:replace="~{fragments :: search_form_and_message('/products/page/1')}"></div>
+    <div th:replace="~{fragments :: search_form_and_message('/products')}"></div>
     <div class="full-details">
         <table class="table table-hover table-responsive-xl">
             <thead class="thead-dark">
@@ -28,7 +28,9 @@
             <tbody>
             <tr th:each="product : ${listProducts}">
                 <td>[[${product.id}]]</td>
-                <td></td>
+                <td>
+                    <img th:src="@{${product.mainImagePath}}" style="width: 120px" class="img-fluid">
+                </td>
                 <td>[[${product.name}]]</td>
                 <td>[[${product.brand.name}]]</td>
                 <td>[[${product.category.name}]]</td>
@@ -58,7 +60,7 @@
         $(document).ready(function() {
             $(".link-delete").on("click", function(e) {
                 e.preventDefault();
-                showDeleteConfirmDialog($(this), 'category');
+                showDeleteConfirmDialog($(this), 'product');
             });
         });
     </script>

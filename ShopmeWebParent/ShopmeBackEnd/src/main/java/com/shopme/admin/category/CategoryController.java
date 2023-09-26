@@ -130,7 +130,7 @@ public class CategoryController {
     public String updateUserEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
         service.updateCategoriesEnableStatus(id, enabled);
         String status = enabled ? "enabled" : "disabled";
-        String message = "The user ID " + id + "has been" + status;
+        String message = "The user ID " + id + "has been " + status;
         redirectAttributes.addFlashAttribute("message", message);
         return "redirect:/categories";
     }

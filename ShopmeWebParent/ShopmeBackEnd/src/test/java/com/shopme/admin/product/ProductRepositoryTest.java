@@ -36,6 +36,9 @@ public class ProductRepositoryTest {
         product.setAlias("acer_aspire_desktop");
         product.setShortDescription("Short Description");
         product.setFullDescription("full Description");
+        product.setMainImage("dsfdsaf.png");
+        product.addExtraImage("dsfasdf.tre");
+        product.addExtraImage("fsdfdsaf.png");
 
         product.setBrand(brand);
         product.setCategory(category);
@@ -87,5 +90,12 @@ public class ProductRepositoryTest {
         assertThat(!result.isPresent());
     }
 
+    @Test
+    public void testSaveProductWithImages() {
+        Integer id = 1;
+        Product product = repo.findById(id).get();
 
+
+        assertThat(product.getImages().size()).isEqualTo(2);
+    }
 }
