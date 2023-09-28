@@ -1,19 +1,5 @@
 var extraImagesCount = 0;
-dropdownBrands = $("#brand");
-dropdownCategories = $("#category");
-
 $(document).ready(function() {
-    $("#shortDescription").richText();
-    $("#fullDescription").richText();
-
-    dropdownBrands.change(function() {
-        dropdownCategories.empty();
-        getCategories();
-    });
-
-    getCategories();
-
-
     $("input[name='extraImage']").each(function(index) {
         extraImagesCount++;
 
@@ -21,14 +7,25 @@ $(document).ready(function() {
             showExtraImageThumbnail(this, index);
         });
     });
-});
 
+    $("a[name='linkRemoveExtraImage']").each(function(index) {
+        $(this).click(function() {
+            removeExtraImage(index);
+        });
+    });
+});
 
 function showExtraImageThumbnail(fileInput, index) {
     var file = fileInput.files[0];
+
+    imageNameHiddenField = $("#imageName" + index);
+    if (imageNameHiddenField.length) {
+        imageNameHiddenField.val(fileName);
+    }
+
     var reader = new FileReader();
     reader.onload = function(e) {
-        $("#extraThumbnail" + index).attr("src", e.target.result)
+        $("#extraThumbnail" + index).attr("src", e.target.result);
     }
     reader.readAsDataURL(file);
 
@@ -39,7 +36,7 @@ function showExtraImageThumbnail(fileInput, index) {
 
 function addNextExtraImageSection(index) {
     htmlExtraImage = `
-        <div class="col border m-3 p-2 " id="divExtraImage${index}">
+        <div class="col border m-3 p-2" id="divExtraImage${index}">
             <div id="extraImageHeader${index}"><label>Extra Image #${index + 1}:</label></div>
             <div class="m-2">
                 <img id="extraThumbnail${index}" alt="Main image number #${index + 1} preview" class="img-fluid" th:src="@{/images/image-thumbnail.png}"/>
@@ -51,27 +48,17 @@ function addNextExtraImageSection(index) {
     `;
 
     htmlLinkRemove = `
-        <a class="btn fas fa-times-circle fa-2x icon-dark float-right" href="javascript:removeExtraImage(${index - 1})" title="Remove this image"></a>
-    `;
+     <a class="btn fas fa-times-circle fa-2x icon-dark float-end"
+     			href="javascript:removeExtraImage(${index - 1})"
+     			title="Remove this image"></a>
+     `;
 
-    $("#divProducImages").append(htmlExtraImage);
-    $("#extraImageHeader" + (index + 1)).append(htmlLinkRemove);
+    $("#divProductImages").append(htmlExtraImage);
+    $("#extraImageHeader" + (index - 1)).append(htmlLinkRemove);
 
     extraImagesCount++;
 }
 
 function removeExtraImage(index) {
     $("#divExtraImage" + index).remove();
-}
-
-
-function getCategories() {
-    brandId = dropdownBrands.val();
-    url = brandModuleURL + "/" + brandId + "/categories";
-
-    $.get(url, function(responseJson) {
-        $.each(responseJson, function(index, category) {
-            $("<option>").val(category.id).text(category.name).appendTo(dropdownCategories);
-        });
-    });
 }

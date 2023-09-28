@@ -2,9 +2,7 @@ package com.shopme.common.entity;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "products")
@@ -45,8 +43,11 @@ public class Product {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductImage> images = new HashSet<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductDetail> details = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -208,14 +209,37 @@ public class Product {
         this.images = images;
     }
 
+    public List<ProductDetail> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<ProductDetail> details) {
+        this.details = details;
+    }
+
     public void addExtraImage(String imageName) {
         this.images.add(new ProductImage(imageName, this));
+    }
+
+    public void addDetail(String detailName, String detailValue) {
+        this.details.add(new ProductDetail(detailName, detailValue, this));
     }
 
     @Transient
     public String getMainImagePath() {
         if(id == null || mainImage == null) return "/images/image-thumbnail.png";
         return "/product-images/" + this.id + this.mainImage;
+    }
+
+    public boolean containsImageName(String imageName) {
+        Iterator<ProductImage> iterator = images.iterator();
+        while (iterator.hasNext()) {
+            ProductImage image = iterator.next();
+            if (image.getName().equals(imageName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

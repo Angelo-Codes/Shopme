@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -34,6 +35,22 @@ public class ProductService {
         return repo.save(product);
     }
 
+    public String checkUnique(Integer id, String name) {
+        boolean isCreatingNew = (id == null || id == 0);
+        Product productName = repo.findByName(name);
+
+        if (isCreatingNew) {
+            if (productName != null) return "Duplicate";
+        } else {
+            if (productName != null || productName.getId() != 0) {
+                return "Duplicate";
+            }
+        }
+
+        return "OK";
+    }
+
+
     public void updateProductEnabledStatus(Integer id, boolean enabled) {
         repo.updateEnabledStatus(id, enabled);
     }
@@ -44,5 +61,14 @@ public class ProductService {
             throw new ProductNotFoundException("could not find any product with ID " + id);
         }
         repo.deleteById(id);
+    }
+
+    public Product get(Integer id) throws ProductNotFoundException{
+        try {
+            return repo.findById(id).get();
+        } catch (NoSuchElementException e) {
+            throw new ProductNotFoundException("Could not find any product with ID =" + id);
+        }
+
     }
 }

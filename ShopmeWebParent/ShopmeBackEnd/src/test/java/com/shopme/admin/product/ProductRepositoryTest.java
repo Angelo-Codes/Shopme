@@ -39,6 +39,9 @@ public class ProductRepositoryTest {
         product.setMainImage("dsfdsaf.png");
         product.addExtraImage("dsfasdf.tre");
         product.addExtraImage("fsdfdsaf.png");
+        product.addDetail("haha", "hahah");
+        product.addDetail("rwrw", "harwrwhah");
+        product.addDetail("ssd", "hahsdsdah");
 
         product.setBrand(brand);
         product.setCategory(category);
@@ -97,5 +100,13 @@ public class ProductRepositoryTest {
 
 
         assertThat(product.getImages().size()).isEqualTo(2);
+    }
+
+    @Test
+    public void testSaveProductWithDetails() {
+        Integer id = 1;
+        Product product = repo.findById(id).get();
+
+        assertThat(product.getDetails().size()).isEqualTo(3);
     }
 }

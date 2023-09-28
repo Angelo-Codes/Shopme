@@ -27,7 +27,7 @@ function showImageThumbnail(fileInput) {
 
 function showModalDialog(title, message) {
     $("#modalDialog").modal("show");
-    $("#modalTile").text(title);
+    $("#modalTitle").text(title);
     $("#modalBody").text(message);
 }
 

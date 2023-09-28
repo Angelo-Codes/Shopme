@@ -17,6 +17,7 @@
           enctype="multipart/form-data"
           th:object="${product}">
         <input type="hidden" th:field="*{id}" />
+        <input th:if="${product.category != null}" type="hidden" id="categoryId" th:value="${product.category.id}"/>
         <div>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
@@ -46,7 +47,13 @@
                 <div class="tab-pane" id="images" role="tabpanel">
                     <div th:replace="~{products/product_images :: content}"></div>
                 </div>
-                <div class="tab-pane" id="details" role="tabpanel">Details</div>
+                <div class="tab-pane" id="details" role="tabpanel">
+                    <div th:replace="~{products/product_details :: content}"></div>
+                    <div>
+                        <input type="button" class="btn btn-secondary" value="Add More Detail"
+                        onclick="addNextDetailSection()"/>
+                    </div>
+                </div>
                 <div class="tab-pane" id="shipping" role="tabpanel">
                     <div th:replace="~{products/product_shipping :: content}"></div>
                 </div>
@@ -67,9 +74,10 @@
     MAX_FILE_SIZE = 5048576;
     moduleURL = "[[@{/products}]]";
     brandModuleURL = "[[@{/brands}]]";
-
 </script>
 <script th:src="@{/js/common_form.js}"></script>
-<script th:src="@{/js/product_form.js}"></script>
+<script th:src="@{/js/product_form_overview.js}"></script>
+<script th:src="@{/js/product_form_images.js}"></script>
+<script th:src="@{/js/product_form_details.js}"></script>
 </body>
 </html>
