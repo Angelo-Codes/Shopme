@@ -1,20 +1,26 @@
 package com.shopme.admin.category;
 
-import com.shopme.common.entity.Category;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import com.shopme.common.entity.Category;
 
 @Service
 @Transactional
 public class CategoryService {
-
     public static final int ROOT_CATEGORIES_PER_PAGE = 4;
 
     @Autowired
@@ -50,87 +56,11 @@ public class CategoryService {
             for (Category category : searchResult) {
                 category.setHasChildren(category.getChildren().size() > 0);
             }
-
             return searchResult;
 
         } else {
             return listHierarchicalCategories(rootCategories, sortDir);
         }
-    }
-
-
-    public List<Category> listCategory() {
-        return (List<Category>) repo.findAll();
-    }
-
-    public Category getId(Integer id) throws CategoryNotfoundException {
-        try {
-            return repo.findById(id).get();
-        } catch (NoSuchElementException ex) {
-            throw new CategoryNotfoundException("could not find any category with ID " + id);
-        }
-    }
-
-    public String checkUnique(Integer id, String name, String alias) {
-        boolean isCreatingNew = (id == null || id == 0);
-
-        Category categoryByName = repo.findByName(name);
-
-        if (isCreatingNew) {
-            if (categoryByName != null) {
-                return "DuplicateName";
-            } else {
-                Category categoryByAlias = repo.findByAlias(alias);
-                if (categoryByAlias != null) {
-                    return "DuplicateAlias";
-                }
-            }
-        } else {
-            if (categoryByName != null && !categoryByName.getId().equals(id)) {
-                return "DuplicateName";
-            }
-
-            Category categoryByAlias = repo.findByAlias(alias);
-            if (categoryByAlias != null && !categoryByAlias.getId().equals(id)) {
-                return "DuplicateAlias";
-            }
-
-        }
-
-        return "OK";
-    }
-
-
-    private SortedSet<Category> sortSubCategories(Set<Category> children) {
-        return sortSubCategories(children, "asc");
-    }
-
-    private SortedSet<Category> sortSubCategories(Set<Category> children, String sortDir) {
-        SortedSet<Category> sortedChildrend = new TreeSet<>( new Comparator<Category>(){
-            @Override
-            public int compare(Category cat1, Category cat2) {
-                if (sortDir.equals("asc")) {
-                    return cat2.getName().compareTo(cat2.getName());
-                } else {
-                    return cat2.getName().compareTo(cat1.getName());
-                }
-            }
-        });
-        sortedChildrend.addAll(children);
-        return sortedChildrend;
-    }
-
-
-    public void delete(Integer id) throws CategoryNotfoundException {
-        Long countById = repo.countById(id);
-        if (countById == null || countById == 0) {
-            throw new CategoryNotfoundException("could not find any category with ID " + id);
-        }
-        repo.deleteById(id);
-    }
-
-    public void updateCategoriesEnableStatus(Integer id, boolean enabled) {
-        repo.updateEnabledStatus(id, enabled);
     }
 
     private List<Category> listHierarchicalCategories(List<Category> rootCategories, String sortDir) {
@@ -152,7 +82,6 @@ public class CategoryService {
         return hierarchicalCategories;
     }
 
-
     private void listSubHierarchicalCategories(List<Category> hierarchicalCategories,
                                                Category parent, int subLevel, String sortDir) {
         Set<Category> children = sortSubCategories(parent.getChildren(), sortDir);
@@ -172,8 +101,14 @@ public class CategoryService {
 
     }
 
-
     public Category save(Category category) {
+        Category parent = category.getParent();
+        if (parent != null) {
+            String allParentIds = parent.getAllParentIDs() == null ? "-" : parent.getAllParentIDs();
+            allParentIds += String.valueOf(parent.getId()) + "-";
+            category.setAllParentIDs(allParentIds);
+        }
+
         return repo.save(category);
     }
 
@@ -198,7 +133,6 @@ public class CategoryService {
         return categoriesUsedInForm;
     }
 
-
     private void listSubCategoriesUsedInForm(List<Category> categoriesUsedInForm,
                                              Category parent, int subLevel) {
         int newSubLevel = subLevel + 1;
@@ -215,5 +149,76 @@ public class CategoryService {
 
             listSubCategoriesUsedInForm(categoriesUsedInForm, subCategory, newSubLevel);
         }
+    }
+
+    public Category get(Integer id) throws CategoryNotfoundException {
+        try {
+            return repo.findById(id).get();
+        } catch (NoSuchElementException ex) {
+            throw new CategoryNotfoundException("Could not find any category with ID " + id);
+        }
+    }
+
+    public String checkUnique(Integer id, String name, String alias) {
+        boolean isCreatingNew = (id == null || id == 0);
+
+        Category categoryByName = repo.findByName(name);
+
+        if (isCreatingNew) {
+            if (categoryByName != null) {
+                return "DuplicateName";
+            } else {
+                Category categoryByAlias = repo.findByAlias(alias);
+                if (categoryByAlias != null) {
+                    return "DuplicateAlias";
+                }
+            }
+        } else {
+            if (categoryByName != null && categoryByName.getId() != id) {
+                return "DuplicateName";
+            }
+
+            Category categoryByAlias = repo.findByAlias(alias);
+            if (categoryByAlias != null && categoryByAlias.getId() != id) {
+                return "DuplicateAlias";
+            }
+
+        }
+
+        return "OK";
+    }
+
+    private SortedSet<Category> sortSubCategories(Set<Category> children) {
+        return sortSubCategories(children, "asc");
+    }
+
+    private SortedSet<Category> sortSubCategories(Set<Category> children, String sortDir) {
+        SortedSet<Category> sortedChildren = new TreeSet<>(new Comparator<Category>() {
+            @Override
+            public int compare(Category cat1, Category cat2) {
+                if (sortDir.equals("asc")) {
+                    return cat1.getName().compareTo(cat2.getName());
+                } else {
+                    return cat2.getName().compareTo(cat1.getName());
+                }
+            }
+        });
+
+        sortedChildren.addAll(children);
+
+        return sortedChildren;
+    }
+
+    public void updateCategoryEnabledStatus(Integer id, boolean enabled) {
+        repo.updateEnabledStatus(id, enabled);
+    }
+
+    public void delete(Integer id) throws CategoryNotfoundException {
+        Long countById = repo.countById(id);
+        if (countById == null || countById == 0) {
+            throw new CategoryNotfoundException("Could not find any category with ID " + id);
+        }
+
+        repo.deleteById(id);
     }
 }

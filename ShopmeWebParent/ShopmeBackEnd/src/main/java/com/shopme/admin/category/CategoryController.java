@@ -1,7 +1,8 @@
 package com.shopme.admin.category;
 
-import com.shopme.admin.FileUploadUtil;
-import com.shopme.common.entity.Category;
+import java.io.IOException;
+import java.util.List;
+
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -15,12 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
-import java.util.List;
+import com.shopme.admin.FileUploadUtil;
+import com.shopme.common.entity.Category;
 
 @Controller
 public class CategoryController {
-
     @Autowired
     private CategoryService service;
 
@@ -63,9 +63,10 @@ public class CategoryController {
 
         return "categories/categories";
     }
+
     @GetMapping("/categories/new")
     public String newCategory(Model model) {
-        List<Category> listCategories = service.listCategory();
+        List<Category> listCategories = service.listCategoriesUsedInForm();
 
         model.addAttribute("category", new Category());
         model.addAttribute("listCategories", listCategories);
@@ -95,48 +96,55 @@ public class CategoryController {
         return "redirect:/categories";
     }
 
-
     @GetMapping("/categories/edit/{id}")
-    public String editCategory(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+    public String editCategory(@PathVariable(name = "id") Integer id, Model model,
+                               RedirectAttributes ra) {
         try {
-            Category category = service.getId(id);
-            List<Category> listCategory = service.listCategory();
+            Category category = service.get(id);
+            List<Category> listCategories = service.listCategoriesUsedInForm();
 
             model.addAttribute("category", category);
-            model.addAttribute("listRoles", listCategory);
+            model.addAttribute("listCategories", listCategories);
             model.addAttribute("pageTitle", "Edit Category (ID: " + id + ")");
 
             return "categories/category_form";
         } catch (CategoryNotfoundException ex) {
-            redirectAttributes.addFlashAttribute("message", ex.getMessage());
+            ra.addFlashAttribute("message", ex.getMessage());
             return "redirect:/categories";
         }
     }
 
+    @GetMapping("/categories/{id}/enabled/{status}")
+    public String updateCategoryEnabledStatus(@PathVariable("id") Integer id,
+                                              @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
+        service.updateCategoryEnabledStatus(id, enabled);
+        String status = enabled ? "enabled" : "disabled";
+        String message = "The category ID " + id + " has been " + status;
+        redirectAttributes.addFlashAttribute("message", message);
+
+        return "redirect:/categories";
+    }
+
     @GetMapping("/categories/delete/{id}")
-    public String deleteCategory(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+    public String deleteCategory(@PathVariable(name = "id") Integer id,
+                                 Model model,
+                                 RedirectAttributes redirectAttributes) {
         try {
             service.delete(id);
             String categoryDir = "../category-images/" + id;
             FileUploadUtil.removeDir(categoryDir);
-            redirectAttributes.addFlashAttribute("message", "the category id " + id + "has been deleted");
-        } catch (CategoryNotfoundException  ex) {
-            redirectAttributes.addFlashAttribute("message", ex.getMessage() );
-        }
-        return "redirect:/categories";
-    }
 
-    @GetMapping("/categories/{id}/enabled/{status}")
-    public String updateUserEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
-        service.updateCategoriesEnableStatus(id, enabled);
-        String status = enabled ? "enabled" : "disabled";
-        String message = "The user ID " + id + "has been " + status;
-        redirectAttributes.addFlashAttribute("message", message);
+            redirectAttributes.addFlashAttribute("message",
+                    "The category ID " + id + " has been deleted successfully");
+        } catch (CategoryNotfoundException ex) {
+            redirectAttributes.addFlashAttribute("message", ex.getMessage());
+        }
+
         return "redirect:/categories";
     }
 
     @GetMapping("/categories/export/csv")
-        public void exportToCsv(HttpServletResponse response) throws IOException {
+    public void exportToCSV(HttpServletResponse response) throws IOException {
         List<Category> listCategories = service.listCategoriesUsedInForm();
         CategoryCsvExporter exporter = new CategoryCsvExporter();
         exporter.export(listCategories, response);

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: page_head('Your Account Details', 'tag')" />
+<head th:replace="~{fragments :: page_head('Your Account Details', 'tag')}" />
 <body>
 	<div class="container-fluid">
-		<div th:replace="navigation :: menu"></div>
+		<div th:replace="~{navigation :: menu}"></div>
 		<div class="text-center">
 			<h1>Your Account Details</h1>
 		</div>
@@ -74,7 +74,7 @@
 			</div>
 		</form>
 
-		<div th:replace="fragments :: footer"></div>
+		<div th:replace="~{fragments :: footer}"></div>
 	</div>
 	<script type="text/javascript">moduleURL = "[[@{/}]]";</script>
 <script th:src="@{/js/common_form.js}"></script>

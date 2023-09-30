@@ -5,7 +5,6 @@ import com.shopme.admin.category.CategoryService;
 import com.shopme.common.entity.Brand;
 import com.shopme.common.entity.Category;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -29,7 +28,6 @@ public class BrandController {
 
     @Autowired
     private CategoryService categoryService;
-
 
     @GetMapping("/brands")
     public String listbyPage(Model model) {
