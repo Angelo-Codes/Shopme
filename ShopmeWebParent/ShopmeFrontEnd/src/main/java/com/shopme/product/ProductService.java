@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
-    private final static int PRODUCT_PER_PAGE = 10;
+    public final static int PRODUCT_PER_PAGE = 10;
     @Autowired
     private ProductRepository repo;
 
