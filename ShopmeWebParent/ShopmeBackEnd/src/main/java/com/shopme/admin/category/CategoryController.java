@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.shopme.common.exeption.CategoryNotFoundException;
 
 import com.shopme.admin.FileUploadUtil;
 import com.shopme.common.entity.Category;
@@ -108,7 +109,7 @@ public class CategoryController {
             model.addAttribute("pageTitle", "Edit Category (ID: " + id + ")");
 
             return "categories/category_form";
-        } catch (CategoryNotfoundException ex) {
+        } catch (CategoryNotFoundException ex) {
             ra.addFlashAttribute("message", ex.getMessage());
             return "redirect:/categories";
         }
@@ -136,7 +137,7 @@ public class CategoryController {
 
             redirectAttributes.addFlashAttribute("message",
                     "The category ID " + id + " has been deleted successfully");
-        } catch (CategoryNotfoundException ex) {
+        } catch (CategoryNotFoundException ex) {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
         }
 

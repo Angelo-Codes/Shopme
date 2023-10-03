@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.shopme.common.exeption.CategoryNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -151,11 +152,11 @@ public class CategoryService {
         }
     }
 
-    public Category get(Integer id) throws CategoryNotfoundException {
+    public Category get(Integer id) throws CategoryNotFoundException {
         try {
             return repo.findById(id).get();
         } catch (NoSuchElementException ex) {
-            throw new CategoryNotfoundException("Could not find any category with ID " + id);
+            throw new CategoryNotFoundException("Could not find any category with ID " + id);
         }
     }
 
@@ -213,10 +214,10 @@ public class CategoryService {
         repo.updateEnabledStatus(id, enabled);
     }
 
-    public void delete(Integer id) throws CategoryNotfoundException {
+    public void delete(Integer id) throws CategoryNotFoundException {
         Long countById = repo.countById(id);
         if (countById == null || countById == 0) {
-            throw new CategoryNotfoundException("Could not find any category with ID " + id);
+            throw new CategoryNotFoundException("Could not find any category with ID " + id);
         }
 
         repo.deleteById(id);
