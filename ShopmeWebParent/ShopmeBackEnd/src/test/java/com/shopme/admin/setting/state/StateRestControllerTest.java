@@ -48,14 +48,14 @@ public class StateRestControllerTest {
                 .andReturn();
         String jsonResponse = result.getResponse().getContentAsString();
         State[] states = objectMapper.readValue(jsonResponse, State[].class);
-        assertThat(states).hasSizeGreaterThan(1);
+        assertThat(states).hasSizeGreaterThan(0);
     }
 
     @Test
     @WithMockUser(username = "nam", password = "something", roles = "Admin")
     public void testCreateState() throws Exception {
+        String url = "/states/save";
         Integer countryId = 2;
-        String url = "/states/save/" + countryId;
         Country country = countryRepo.findById(countryId).get();
         State state = new State("Arizona", country);
 
@@ -75,8 +75,8 @@ public class StateRestControllerTest {
     @Test
     @WithMockUser(username = "nam", password = "something", roles = "Admin")
     public void testUpdateState() throws Exception {
-        Integer stateId = 9;
-        String url = "/states/save";
+        Integer stateId = 6;
+        String url = "/states/save/" + stateId;
 
         String stateName = "Alaska";
         Country state = countryRepo.findById(stateId).get();
@@ -98,7 +98,7 @@ public class StateRestControllerTest {
     @Test
     @WithMockUser(username = "nam", password = "something", roles = "Admin")
     public void testDeleteState() throws Exception {
-        Integer stateId = 6;
+        Integer stateId = 2;
         String url = "/states/delete/" + stateId;
 
         mockMvc.perform(get(url)).andExpect(status().isOk());

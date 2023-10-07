@@ -37,7 +37,7 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests((requests) ->
-				requests.requestMatchers("/users/**").hasAuthority("Admin")
+				requests.requestMatchers("/users/**", "/settings/**", "/countries/**", "/states/**").hasAuthority("Admin")
 						.requestMatchers("/categories/**", "/brands/**").hasAnyAuthority("Admin", "Editor")
 						.requestMatchers("/products/new", "product/delete/**").hasAnyAuthority("Admin", "Editor")
 						.requestMatchers("/product/edit/**", "/products/save", "/products/check_unique").hasAnyAuthority("Admin", "Editor", "Salesperson")

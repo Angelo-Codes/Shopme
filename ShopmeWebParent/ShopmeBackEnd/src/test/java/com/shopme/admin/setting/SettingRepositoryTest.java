@@ -46,6 +46,23 @@ public class SettingRepositoryTest {
     }
 
     @Test
+    public void testCreateMailSettings() {
+        Setting currencyId = new Setting("MAIL_PORT", "123", SettingCategory.MAIL_SERVER);
+        Setting symbol = new Setting("MAIL_HOST", "smtp.gmail.com", SettingCategory.MAIL_SERVER);
+        Setting symbolPosition = new Setting("MAIL_USERNAME", "username", SettingCategory.MAIL_SERVER);
+        Setting decimalPointType = new Setting("MAIL_PASSWORD", "password", SettingCategory.MAIL_SERVER);
+        Setting decimalDigits = new Setting("MAIL_FROM", "shopme@gmail.com", SettingCategory.MAIL_SERVER);
+        Setting thousandsPointType = new Setting("SMTP_AUTH", "true", SettingCategory.MAIL_SERVER);
+        Setting thousandsPoint = new Setting("SMTP_SECURED", "true", SettingCategory.MAIL_SERVER);
+        Setting thousandsPointTyp = new Setting("MAIL_SENDER_NAME", "Shopme Team", SettingCategory.MAIL_SERVER);
+        Setting thousndsPoint = new Setting("SMTP_SECURED", "true", SettingCategory.MAIL_SERVER);
+        Setting thosandsPoint = new Setting("CUSTOMER_VERIFY_SUBJECT", "Email subject", SettingCategory.MAIL_TEMPLATES);
+        repo.saveAll(List.of(currencyId, symbol, symbolPosition, decimalPointType,
+                decimalDigits, thousandsPointType, thousandsPoint, thousandsPointTyp, thousndsPoint, thosandsPoint));
+
+    }
+
+    @Test
     public void testListSettingsByCategory() {
         List<Setting> settings = repo.findByCategory(SettingCategory.GENERAL);
         settings.forEach(System.out::println);
