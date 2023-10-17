@@ -1,10 +1,8 @@
-package com.shopme.common.entity1;
+package com.shopme.common.entity;
 
-import com.shopme.common.entity.IdBasedEntity;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "currencies")

@@ -3,18 +3,17 @@ package com.shopme.admin.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
 	@Bean
 	public UserDetailsService userDetailsService() {
@@ -33,57 +32,55 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		return authProvider;
 	}
-	
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(authenticationProvider());
-	}
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-			.antMatchers("/states/list_by_country/**").hasAnyAuthority("Admin", "Salesperson")
-			.antMatchers("/users/**", "/settings/**", "/countries/**", "/states/**").hasAuthority("Admin")
-			.antMatchers("/categories/**", "/brands/**").hasAnyAuthority("Admin", "Editor")
+
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.authorizeHttpRequests((requests) ->
+		requests.requestMatchers("/states/list_by_country/**").hasAnyAuthority("Admin", "Salesperson")
+			.requestMatchers("/users/**", "/settings/**", "/countries/**", "/states/**").hasAuthority("Admin")
+			.requestMatchers("/categories/**", "/brands/**").hasAnyAuthority("Admin", "Editor")
 			
-			.antMatchers("/products/new", "/products/delete/**").hasAnyAuthority("Admin", "Editor")
+			.requestMatchers("/products/new", "/products/delete/**").hasAnyAuthority("Admin", "Editor")
 			
-			.antMatchers("/products/edit/**", "/products/save", "/products/check_unique")
+			.requestMatchers("/products/edit/**", "/products/save", "/products/check_unique")
 				.hasAnyAuthority("Admin", "Editor", "Salesperson")
 				
-			.antMatchers("/products", "/products/", "/products/detail/**", "/products/page/**")
+			.requestMatchers("/products", "/products/", "/products/detail/**", "/products/page/**")
 				.hasAnyAuthority("Admin", "Editor", "Salesperson", "Shipper")
 				
-			.antMatchers("/products/**").hasAnyAuthority("Admin", "Editor")
+			.requestMatchers("/products/**").hasAnyAuthority("Admin", "Editor")
 			
-			.antMatchers("/orders", "/orders/", "/orders/page/**", "/orders/detail/**").hasAnyAuthority("Admin", "Salesperson", "Shipper")
+			.requestMatchers("/orders", "/orders/", "/orders/page/**", "/orders/detail/**").hasAnyAuthority("Admin", "Salesperson", "Shipper")
 			
-			.antMatchers("/products/detail/**", "/customers/detail/**").hasAnyAuthority("Admin", "Editor", "Salesperson", "Assistant")
+			.requestMatchers("/products/detail/**", "/customers/detail/**").hasAnyAuthority("Admin", "Editor", "Salesperson", "Assistant")
 
-			.antMatchers("/customers/**", "/orders/**", "/get_shipping_cost", "/reports/**").hasAnyAuthority("Admin", "Salesperson")
+			.requestMatchers("/customers/**", "/orders/**", "/get_shipping_cost", "/reports/**").hasAnyAuthority("Admin", "Salesperson")
 			
-			.antMatchers("/orders_shipper/update/**").hasAuthority("Shipper")
+			.requestMatchers("/orders_shipper/update/**").hasAuthority("Shipper")
 			
-			.antMatchers("/reviews/**").hasAnyAuthority("Admin", "Assistant")
+			.requestMatchers("/reviews/**").hasAnyAuthority("Admin", "Assistant")
 			
 			.anyRequest().authenticated()
-			.and()
-			.formLogin()			
-				.loginPage("/login")
+		).formLogin((form) ->
+				form.loginPage("/login")
 				.usernameParameter("email")
 				.permitAll()
-			.and().logout().permitAll()
-			.and()
-				.rememberMe()
-					.key("AbcDefgHijKlmnOpqrs_1234567890")
-					.tokenValiditySeconds(7 * 24 * 60 * 60);
-					;
-			http.headers().frameOptions().sameOrigin();
+		).logout((formLogout) ->
+				formLogout.logoutUrl("/logout")
+						.permitAll()
+		).rememberMe((form) ->
+				form.key("fsdafsdfsdffd_435432543425432")
+						.tokenValiditySeconds(7 * 24 * 60 * 60)
+						.userDetailsService(userDetailsService())
+		);
+
+		return http.build();
 	}
 
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/images/**", "/js/**", "/webjars/**");
+	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+		return (web) -> web.ignoring().requestMatchers("/images/**", "/js/**", "/webjars/**", "/fontawesome/**", "/style.css/**", "/webfonts/**", "/static/user-photos/**");
 	}
 
 	

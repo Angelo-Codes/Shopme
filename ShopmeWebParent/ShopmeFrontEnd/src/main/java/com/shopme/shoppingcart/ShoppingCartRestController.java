@@ -1,7 +1,7 @@
 package com.shopme.shoppingcart;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.shopme.common.exception.CustomerNotFoundExeption;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shopme.Utility;
 import com.shopme.common.entity.Customer;
-import com.shopme.common.exception.CustomerNotFoundException;
 import com.shopme.customer.CustomerService;
 
 @RestController
@@ -27,7 +26,7 @@ public class ShoppingCartRestController {
 			Integer updatedQuantity = cartService.addProduct(productId, quantity, customer);
 			
 			return updatedQuantity + " item(s) of this product were added to your shopping cart.";
-		} catch (CustomerNotFoundException ex) {
+		} catch (CustomerNotFoundExeption ex) {
 			return "You must login to add this product to cart.";
 		} catch (ShoppingCartException ex) {
 			return ex.getMessage();
@@ -36,10 +35,10 @@ public class ShoppingCartRestController {
 	}
 	
 	private Customer getAuthenticatedCustomer(HttpServletRequest request) 
-			throws CustomerNotFoundException {
+			throws CustomerNotFoundExeption {
 		String email = Utility.getEmailOfAuthenticatedCustomer(request);
 		if (email == null) {
-			throw new CustomerNotFoundException("No authenticated customer");
+			throw new CustomerNotFoundExeption("No authenticated customer");
 		}
 				
 		return customerService.getCustomerByEmail(email);
@@ -53,7 +52,7 @@ public class ShoppingCartRestController {
 			float subtotal = cartService.updateQuantity(productId, quantity, customer);
 			
 			return String.valueOf(subtotal);
-		} catch (CustomerNotFoundException ex) {
+		} catch (CustomerNotFoundExeption ex) {
 			return "You must login to change quantity of product.";
 		}	
 	}
@@ -67,7 +66,7 @@ public class ShoppingCartRestController {
 			
 			return "The product has been removed from your shopping cart.";
 			
-		} catch (CustomerNotFoundException e) {
+		} catch (CustomerNotFoundExeption e) {
 			return "You must login to remove product.";
 		}
 	}

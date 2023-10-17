@@ -1,9 +1,7 @@
-package com.shopme.common.entity1;
+package com.shopme.common.entity;
 
-import com.shopme.common.entity.IdBasedEntity;
-
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class AbstractAddress extends IdBasedEntity {

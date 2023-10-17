@@ -1,4 +1,4 @@
-package com.shopme.common.exeption;
+package com.shopme.common.exception;
 
 public class ReviewNotFoundException extends Exception {
 

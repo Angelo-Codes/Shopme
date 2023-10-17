@@ -2,9 +2,10 @@ package com.shopme.customer;
 
 import java.io.UnsupportedEncodingException;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletRequest;
+import com.shopme.common.exception.CustomerNotFoundExeption;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.shopme.Utility;
 import com.shopme.common.entity.Customer;
-import com.shopme.common.exception.CustomerNotFoundException;
 import com.shopme.setting.EmailSettingBag;
 import com.shopme.setting.SettingService;
 
@@ -40,7 +40,7 @@ public class ForgotPasswordController {
 			
 			model.addAttribute("message", "We have sent a reset password link to your email."
 					+ " Please check.");
-		} catch (CustomerNotFoundException e) {
+		} catch (CustomerNotFoundExeption e) {
 			model.addAttribute("error", e.getMessage());
 		} catch (UnsupportedEncodingException | MessagingException e) {
 			model.addAttribute("error", "Could not send email");
@@ -102,7 +102,7 @@ public class ForgotPasswordController {
 			model.addAttribute("title", "Reset Your Password");
 			model.addAttribute("message", "You have successfully changed your password.");
 			
-		} catch (CustomerNotFoundException e) {
+		} catch (CustomerNotFoundExeption e) {
 			model.addAttribute("pageTitle", "Invalid Token");
 			model.addAttribute("message", e.getMessage());
 		}	

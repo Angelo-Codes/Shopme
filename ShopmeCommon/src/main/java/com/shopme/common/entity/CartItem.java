@@ -1,14 +1,11 @@
-package com.shopme.common.entity1;
+package com.shopme.common.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
-import com.shopme.common.entity.Customer;
-import com.shopme.common.entity.IdBasedEntity;
-import com.shopme.common.entity.Product;
 import com.shopme.common.entity.product.Product;
 
 @Entity

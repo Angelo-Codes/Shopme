@@ -1,4 +1,4 @@
-package com.shopme.common.entity1.order;
+package com.shopme.common.entity.order;
 
 public enum OrderStatus {
 	

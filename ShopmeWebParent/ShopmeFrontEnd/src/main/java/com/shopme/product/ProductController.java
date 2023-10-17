@@ -2,7 +2,9 @@ package com.shopme.product;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import com.shopme.common.exception.CategoryNotFoundException;
+import com.shopme.common.exception.ProductNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,8 +19,6 @@ import com.shopme.common.entity.Category;
 import com.shopme.common.entity.Customer;
 import com.shopme.common.entity.Review;
 import com.shopme.common.entity.product.Product;
-import com.shopme.common.exception.CategoryNotFoundException;
-import com.shopme.common.exception.ProductNotFoundException;
 import com.shopme.review.ReviewService;
 import com.shopme.review.vote.ReviewVoteService;
 

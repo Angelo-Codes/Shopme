@@ -2,6 +2,7 @@ package com.shopme.product;
 
 import java.util.NoSuchElementException;
 
+import com.shopme.common.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.shopme.common.entity.product.Product;
-import com.shopme.common.exception.ProductNotFoundException;
 
 @Service
 public class ProductService {

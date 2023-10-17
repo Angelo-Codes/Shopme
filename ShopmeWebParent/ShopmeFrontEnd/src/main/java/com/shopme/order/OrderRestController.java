@@ -1,6 +1,7 @@
 package com.shopme.order;
 
-import javax.servlet.http.HttpServletRequest;
+import com.shopme.common.exception.CustomerNotFoundExeption;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shopme.Utility;
 import com.shopme.common.entity.Customer;
-import com.shopme.common.exception.CustomerNotFoundException;
 import com.shopme.common.exception.OrderNotFoundException;
 import com.shopme.customer.CustomerService;
 
@@ -33,7 +33,7 @@ public class OrderRestController {
 		
 		try {
 			customer = getAuthenticatedCustomer(servletRequest);
-		} catch (CustomerNotFoundException ex) {
+		} catch (CustomerNotFoundExeption ex) {
 			return new ResponseEntity<>("Authentication required", HttpStatus.BAD_REQUEST);
 		}
 		
@@ -47,10 +47,10 @@ public class OrderRestController {
 	}
 	
 	private Customer getAuthenticatedCustomer(HttpServletRequest request) 
-			throws CustomerNotFoundException {
+			throws CustomerNotFoundExeption {
 		String email = Utility.getEmailOfAuthenticatedCustomer(request);
 		if (email == null) {
-			throw new CustomerNotFoundException("No authenticated customer");
+			throw new CustomerNotFoundExeption("No authenticated customer");
 		}
 				
 		return customerService.getCustomerByEmail(email);

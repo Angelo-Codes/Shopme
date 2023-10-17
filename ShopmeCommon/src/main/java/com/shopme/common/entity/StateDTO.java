@@ -1,4 +1,4 @@
-package com.shopme.common.entity1;
+package com.shopme.common.entity;
 
 public class StateDTO {
 	private Integer id;

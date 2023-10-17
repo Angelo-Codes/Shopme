@@ -1,11 +1,8 @@
-package com.shopme.common.entity1;
+package com.shopme.common.entity;
 
-import com.shopme.common.entity.AbstractAddress;
-import com.shopme.common.entity.Country;
-
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class AbstractAddressWithCountry extends AbstractAddress {

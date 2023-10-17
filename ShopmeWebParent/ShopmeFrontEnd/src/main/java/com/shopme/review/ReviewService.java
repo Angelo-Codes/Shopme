@@ -2,7 +2,7 @@ package com.shopme.review;
 
 import java.util.Date;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

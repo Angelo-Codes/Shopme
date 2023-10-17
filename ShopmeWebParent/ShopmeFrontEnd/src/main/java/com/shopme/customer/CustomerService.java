@@ -3,7 +3,8 @@ package com.shopme.customer;
 import java.util.Date;
 import java.util.List;
 
-import javax.transaction.Transactional;
+import com.shopme.common.exception.CustomerNotFoundExeption;
+import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.shopme.common.entity.AuthenticationType;
 import com.shopme.common.entity.Country;
 import com.shopme.common.entity.Customer;
-import com.shopme.common.exception.CustomerNotFoundException;
 import com.shopme.setting.CountryRepository;
 
 import net.bytebuddy.utility.RandomString;
@@ -130,7 +130,7 @@ public class CustomerService {
 		customerRepo.save(customerInForm);
 	}
 
-	public String updateResetPasswordToken(String email) throws CustomerNotFoundException {
+	public String updateResetPasswordToken(String email) throws CustomerNotFoundExeption {
 		Customer customer = customerRepo.findByEmail(email);
 		if (customer != null) {
 			String token = RandomString.make(30);
@@ -139,7 +139,7 @@ public class CustomerService {
 			
 			return token;
 		} else {
-			throw new CustomerNotFoundException("Could not find any customer with the email " + email);
+			throw new CustomerNotFoundExeption("Could not find any customer with the email " + email);
 		}
 	}	
 	
@@ -147,10 +147,10 @@ public class CustomerService {
 		return customerRepo.findByResetPasswordToken(token);
 	}
 	
-	public void updatePassword(String token, String newPassword) throws CustomerNotFoundException {
+	public void updatePassword(String token, String newPassword) throws CustomerNotFoundExeption {
 		Customer customer = customerRepo.findByResetPasswordToken(token);
 		if (customer == null) {
-			throw new CustomerNotFoundException("No customer found: invalid token");
+			throw new CustomerNotFoundExeption("No customer found: invalid token");
 		}
 		
 		customer.setPassword(newPassword);
