@@ -1,12 +1,12 @@
 package com.shopme.admin.setting;
 
-import com.shopme.common.entity.Currency;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
-@Repository
+import org.springframework.data.repository.CrudRepository;
+
+import com.shopme.common.entity.Currency;
+
 public interface CurrencyRepository extends CrudRepository<Currency, Integer> {
-    public List<Currency> findAllByOrderByNameAsc();
+	
+	public List<Currency> findAllByOrderByNameAsc();
 }

@@ -1,179 +1,106 @@
-package com.shopme.common.entity;
+package com.shopme.common.entity1;
 
-import jakarta.persistence.*;
+import com.shopme.common.entity.AbstractAddressWithCountry;
+import com.shopme.common.entity.AuthenticationType;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
+
 @Entity
 @Table(name = "customers")
-public class Customer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Column(nullable = false, unique = true, length = 45)
-    private String email;
-    @Column(nullable = false, length = 64)
-    private String password;
-    @Column(name = "first_name", nullable = false, length = 45)
-    private String firstname;
-    @Column(name = "last_name", nullable = false, length = 45)
-    private String lastname;
-    @Column(name = "phone_number", nullable = false, length = 15)
-    private String phoneNumber;
-    @Column(nullable = false, length = 64)
-    private String addressLine1;
-    @Column(name = "address_line_2", length = 64)
-    private String addressLine2;
-    @Column(nullable = false, length = 45)
-    private String city;
-    @Column(nullable = false, length = 45)
-    private String state;
-    @Column(name = "postal_code", nullable = false, length = 10)
-    private String postalCode;
-    @Column(name = "created_time")
-    private Date createdTime;
-    private boolean enabled;
-    @Column(name = "verification_code", length = 64)
-    private String verificationCode;
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    private Country country;
+public class Customer extends AbstractAddressWithCountry {
+	
+	@Column(nullable = false, unique = true, length = 45)
+	private String email;
 
-    public Customer() {
-    }
+	@Column(nullable = false, length = 64)
+	private String password;
+	
+	@Column(name = "verification_code", length = 64)
+	private String verificationCode;	
+	
+	private boolean enabled;
+	
+	@Column(name = "created_time")
+	private Date createdTime;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "authentication_type", length = 10)
+	private AuthenticationType authenticationType;
+	
+	@Column(name = "reset_password_token", length = 30)
+	private String resetPasswordToken;
 
-    public Integer getId() {
-        return id;
-    }
+	public Customer() {
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public Customer(Integer id) {
+		this.id = id;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public String getFirstname() {
-        return firstname;
-    }
+	public String getVerificationCode() {
+		return verificationCode;
+	}
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
+	}
 
-    public String getLastname() {
-        return lastname;
-    }
+	public boolean isEnabled() {
+		return enabled;
+	}
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+	public Date getCreatedTime() {
+		return createdTime;
+	}
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
+	
+	public String getFullName() {
+		return firstName + " " + lastName;
+	}
 
-    public String getAddressLine1() {
-        return addressLine1;
-    }
+	public AuthenticationType getAuthenticationType() {
+		return authenticationType;
+	}
 
-    public void setAddressLine1(String addressLine1) {
-        this.addressLine1 = addressLine1;
-    }
+	public void setAuthenticationType(AuthenticationType authenticationType) {
+		this.authenticationType = authenticationType;
+	}
 
-    public String getAddressLine2() {
-        return addressLine2;
-    }
+	public String getResetPasswordToken() {
+		return resetPasswordToken;
+	}
 
-    public void setAddressLine2(String addressLine2) {
-        this.addressLine2 = addressLine2;
-    }
+	public void setResetPasswordToken(String resetPasswordToken) {
+		this.resetPasswordToken = resetPasswordToken;
+	}
 
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public Date getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getVerificationCode() {
-        return verificationCode;
-    }
-
-    public void setVerificationCode(String verificationCode) {
-        this.verificationCode = verificationCode;
-    }
-
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
-    }
-
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", postalCode='" + postalCode + '\'' +
-                '}';
-    }
-
-    public String getFullName() {
-        return firstname + " " + lastname;
-    }
 }

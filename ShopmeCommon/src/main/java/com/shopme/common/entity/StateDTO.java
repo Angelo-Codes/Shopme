@@ -1,30 +1,31 @@
-package com.shopme.common.entity;
+package com.shopme.common.entity1;
 
 public class StateDTO {
-    private Integer id;
-    private String name;
+	private Integer id;
+	private String name;
+	
+	public StateDTO() {
+		
+	}
+	
+	public StateDTO(Integer id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
-    public StateDTO() {
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public StateDTO(Integer id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public Integer getId() {
-        return id;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}	
 }

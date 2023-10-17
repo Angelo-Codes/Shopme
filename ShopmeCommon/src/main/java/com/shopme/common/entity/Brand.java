@@ -1,88 +1,85 @@
-package com.shopme.common.entity;
-
-import jakarta.persistence.*;
+package com.shopme.common.entity1;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.shopme.common.Constants;
+import com.shopme.common.entity.Category;
+import com.shopme.common.entity.IdBasedEntity;
+
 @Entity
 @Table(name = "brands")
-public class Brand {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Column(length = 45, nullable = false, unique = true)
-    private String name;
-    @Column(length = 128, nullable = false)
-    private String logo;
+public class Brand extends IdBasedEntity {
+	
+	@Column(nullable = false, length = 45, unique = true)
+	private String name;
+	
+	@Column(nullable = false, length = 128)
+	private String logo;
+	
+	@ManyToMany
+	@JoinTable(
+			name = "brands_categories",
+			joinColumns = @JoinColumn(name = "brand_id"),
+			inverseJoinColumns = @JoinColumn(name = "category_id")
+			)
+	private Set<Category> categories = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "brands_categories",
-            joinColumns = @JoinColumn(name = "brand_id"),
-            inverseJoinColumns = @JoinColumn(name = "categories_id")
-    )
+	public Brand() {
+		
+	}
+	
+	public Brand(String name) {
+		this.name = name;
+		this.logo = "brand-logo.png";
+	}
 
-    private Set<Category> categories = new HashSet<>();
+	public Brand(Integer id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
-    public Brand() {
-    }
+	public String getName() {
+		return name;
+	}
 
-    public Brand(String name) {
-        this.name = name;
-        this.logo = "brand_logo.png";
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public Brand(Integer id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+	public String getLogo() {
+		return logo;
+	}
 
-    public Integer getId() {
-        return id;
-    }
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public Set<Category> getCategories() {
+		return categories;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	@Override
+	public String toString() {
+		return "Brand [id=" + id + ", name=" + name + ", categories=" + categories + "]";
+	}
 
-    public String getLogo() {
-        return logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
-    }
-
-    public Set<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(Set<Category> categories) {
-        this.categories = categories;
-    }
-
-    @Override
-    public String toString() {
-        return "Brand{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", logo='" + logo + '\'' +
-                ", categories=" + categories +
-                '}';
-    }
-
-    @Transient
-    public String getLogoPath() {
-        if (this.id == null) return "images/image-thumbnail.png";
-        return "/brand-logos/" + this.id + "/" + this.logo;
-    }
+	@Transient
+	public String getLogoPath() {
+		if (this.id == null) return "/images/image-thumbnail.png";
+		
+		return Constants.S3_BASE_URI + "/brand-logos/" + this.id + "/" + this.logo;		
+	}
 }
